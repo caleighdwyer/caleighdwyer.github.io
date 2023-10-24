@@ -17,6 +17,9 @@ We use ! [] to add an image from somewhere else on the internet or in your repos
 ![](images/example)
 
 
+# Other stuff on this page
+Definitely there is [plotly](plotly.html)
+
 
 This is a [link](https://www.google.com/) to a good data science tool. Here's a link to [p8105](https://p8105.com/index.html) SOON: a link to another page on this site.
 
