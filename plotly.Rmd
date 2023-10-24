@@ -1,0 +1,82 @@
+---
+title: "plotly"
+author: "Caleigh Dwyer"
+date: "2023-10-24"
+output: html_document
+---
+
+
+# Plotly
+
+We're making interactive plots
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(p8105.datasets)
+```
+
+focus on NYC airbnb
+
+```{r}
+data("nyc_airbnb")
+
+nyc_airbnb =
+  nyc_airbnb |> 
+  mutate(stars = review_scores_location/2) |> 
+  select(borough = neighbourhood_group,
+         neighbourhood, stars, price, room_type, lat, long) |> 
+  drop_na(stars) |> 
+  filter(
+    borough == "Manhattan",
+    room_type == "Entire home/apt",
+    price %in% 100:500)
+
+```
+
+
+let's make a scatterplot!
+
+```{r}
+nyc_airbnb |> 
+  plot_ly(x= ~lat, y = ~long, color = ~price,
+          type= "scatter", mode = "markers")
+
+##this plots the bnbs by latitude and longitude and the color indicates price. It's more interactive than ggplot (you can drag the cursor to zoom in)
+```
+
+
+
+```{r}
+nyc_airbnb |> 
+  mutate(text_label = str_c("Price: $", price, "\nRating: ", stars)) |> 
+  plot_ly(x= ~lat, y = ~long, color = ~price, text = ~text_label,
+          type= "scatter", mode = "markers")
+
+##mutate line adds text labels to points on the plot
+```
+
+let's make a box plot!
+
+```{r}
+nyc_airbnb |> 
+  mutate(neighbourhood = fct_reorder(neighbourhood, price)) |> 
+  plot_ly(y = ~price, color = ~neighbourhood, type = "box", colors = "viridis")
+
+##can click on different boxes in the key to toggle on and off the comparisons
+## adding mutate line reorders so that neighborhoods are organized by price. can also change colorscheme with "colors"
+```
+
+
+
+let's make a bar plot!
+
+```{r}
+nyc_airbnb |> 
+  count(neighbourhood) |> 
+  mutate(neighbourhood = fct_reorder(neighbourhood, n)) |> 
+  plot_ly(x = ~neighbourhood, y =~n, color = ~neighbourhood, type = "bar", colors = "viridis")
+
+##creates barchart, have to do the count first to create the "n" variable to plot against
+```
+
